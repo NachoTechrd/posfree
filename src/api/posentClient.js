@@ -171,10 +171,12 @@ export const posent = {
           name: p.nombre,
           description: p.descripcion || '',
           price: p.precio,
-          cost: p.costo || 0,
-          stock: p.stock_actual || 0,
+          cost_price: p.costo || 0,
+          stock_quantity: p.stock_actual || 0,
+          low_stock_alert: p.stock_minimo || 3,
           category: p.categoria || 'producto',
-          code: p.codigo
+          sku: p.codigo,
+          image: p.imagen || ''
         }));
       },
       create: async (data) => {
@@ -182,10 +184,12 @@ export const posent = {
           nombre: data.name,
           descripcion: data.description,
           precio: data.price,
-          costo: data.cost || 0,
-          stock_actual: data.stock || 0,
+          costo: data.cost_price || 0,
+          stock_actual: data.stock_quantity || 0,
+          stock_minimo: data.low_stock_alert || 3,
           categoria: data.category || 'producto',
-          codigo: data.code || 'PROD-' + Date.now().toString().slice(-6)
+          codigo: data.sku || 'PROD-' + Date.now().toString().slice(-6),
+          imagen: data.image
         };
         const res = await api.post('/products', payload);
         const p = res.data.data;
@@ -194,10 +198,12 @@ export const posent = {
           name: p.nombre,
           description: p.descripcion,
           price: p.precio,
-          cost: p.costo,
-          stock: p.stock_actual,
+          cost_price: p.costo,
+          stock_quantity: p.stock_actual,
+          low_stock_alert: p.stock_minimo,
           category: p.categoria,
-          code: p.codigo
+          sku: p.codigo,
+          image: p.imagen
         };
       },
       update: async (id, data) => {
@@ -205,10 +211,12 @@ export const posent = {
           nombre: data.name,
           descripcion: data.description,
           precio: data.price,
-          costo: data.cost || 0,
-          stock_actual: data.stock || 0,
+          costo: data.cost_price || 0,
+          stock_actual: data.stock_quantity || 0,
+          stock_minimo: data.low_stock_alert || 3,
           categoria: data.category || 'producto',
-          codigo: data.code
+          codigo: data.sku,
+          imagen: data.image
         };
         const res = await api.put(`/products/${id}`, payload);
         const p = res.data.data;
@@ -217,10 +225,12 @@ export const posent = {
           name: p.nombre,
           description: p.descripcion,
           price: p.precio,
-          cost: p.costo,
-          stock: p.stock_actual,
+          cost_price: p.costo,
+          stock_quantity: p.stock_actual,
+          low_stock_alert: p.stock_minimo,
           category: p.categoria,
-          code: p.codigo
+          sku: p.codigo,
+          image: p.imagen
         };
       },
       delete: async (id) => {

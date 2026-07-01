@@ -45,47 +45,81 @@ export default function Dashboard() {
     const recentQuotes = quotes.slice(0, 5);
     const recentInvoices = invoices.slice(0, 5);
 
-    // This month stats
+    // This month stats (manually parsing YYYY-MM-DD to be timezone-safe)
     const now = new Date();
     const thisMonth = (arr, amountKey) =>
         arr.filter((x) => {
-            const d = new Date(x.expense_date || x.issue_date || x.created_date);
-            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            const dateStr = x.expense_date || x.issue_date || x.created_date || x.fecha;
+            if (!dateStr) return false;
+            const parts = dateStr.split('T')[0].split('-');
+            if (parts.length < 2) return false;
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            return month === now.getMonth() && year === now.getFullYear();
         }).reduce((s, x) => s + (x[amountKey] || 0), 0);
 
     const monthIncome = thisMonth(invoices, "total");
     const monthExpenses = thisMonth(expenses, "amount");
     const monthBalance = monthIncome - monthExpenses;
 
+    // Daily summary calculations
+    const todayStr = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().split("T")[0];
+    const todayInvoiced = invoices
+        .filter((inv) => (inv.issue_date || '').split('T')[0] === todayStr)
+        .reduce((sum, inv) => sum + (inv.total || 0), 0);
+
+    // Cash balance (payments in efectivo minus cash expenses)
+    const cashIncomes = invoices
+        .filter((inv) => inv.payment_method === "efectivo")
+        .reduce((sum, inv) => {
+            if (inv.status === "pagada") return sum + (inv.total || 0);
+            return sum + (inv.amount_paid || 0);
+        }, 0);
+    const cashExpenses = expenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+    const cashInHand = cashIncomes - cashExpenses;
+
     // By business unit
     const { user } = useAuth();
-    const BUSINESS_UNITS = useMemo(() => {
-        const units = new Set(invoices.map(i => i.business_unit).filter(Boolean));
-        const userBiz = user?.negocio?.nombre || user?.nombre || "Mi Negocio";
-        units.add(userBiz);
-        return Array.from(units);
-    }, [invoices, user]);
+    const userBiz = user?.negocio?.nombre || user?.nombre || "Mi Negocio";
 
-    const byUnit = useMemo(() =>
-        BUSINESS_UNITS.map((unit) => ({
+    const byUnit = useMemo(() => {
+        const units = Array.from(new Set(invoices.map(i => i.business_unit || userBiz)));
+        return units.map((unit) => ({
             unit,
-            total: invoices.filter((i) => i.business_unit === unit).reduce((s, i) => s + (i.total || 0), 0),
-            count: invoices.filter((i) => i.business_unit === unit).length,
-        })).filter((u) => u.count > 0),
-        [invoices, BUSINESS_UNITS]
-    );
+            total: invoices.filter((i) => (i.business_unit || userBiz) === unit).reduce((s, i) => s + (i.total || 0), 0),
+            count: invoices.filter((i) => (i.business_unit || userBiz) === unit).length,
+        })).filter((u) => u.count > 0);
+    }, [invoices, userBiz]);
 
     const maxUnit = byUnit.length ? Math.max(...byUnit.map((u) => u.total)) : 1;
 
     // By lead source
-    const bySource = useMemo(() =>
-        LEAD_SOURCES.map((src) => ({
+    const bySource = useMemo(() => {
+        const results = LEAD_SOURCES.map((src) => ({
             src,
             total: invoices.filter((i) => i.lead_source === src).reduce((s, i) => s + (i.total || 0), 0),
             count: invoices.filter((i) => i.lead_source === src).length,
-        })).filter((s) => s.count > 0).sort((a, b) => b.total - a.total),
-        [invoices]
-    );
+        }));
+
+        const unspecifiedTotal = invoices
+            .filter((i) => !i.lead_source || !LEAD_SOURCES.includes(i.lead_source))
+            .reduce((s, i) => s + (i.total || 0), 0);
+        const unspecifiedCount = invoices
+            .filter((i) => !i.lead_source || !LEAD_SOURCES.includes(i.lead_source))
+            .length;
+
+        if (unspecifiedCount > 0) {
+            const otroIdx = results.findIndex(r => r.src === 'Otro');
+            if (otroIdx !== -1) {
+                results[otroIdx].total += unspecifiedTotal;
+                results[otroIdx].count += unspecifiedCount;
+            } else {
+                results.push({ src: 'Otro', total: unspecifiedTotal, count: unspecifiedCount });
+            }
+        }
+
+        return results.filter((s) => s.count > 0).sort((a, b) => b.total - a.total);
+    }, [invoices]);
 
     const maxSource = bySource.length ? Math.max(...bySource.map((s) => s.total)) : 1;
 
@@ -113,6 +147,30 @@ export default function Dashboard() {
                 <StatCard title="Facturas" value={invoices.length} icon={Receipt} />
                 <StatCard title="Total Facturado" value={formatCurrency(totalInvoiced)} icon={DollarSign} />
                 <StatCard title="Por Cobrar" value={formatCurrency(totalPending)} icon={Clock} />
+            </div>
+
+            {/* Resumen Diario */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-card rounded-xl border border-border p-5 flex items-center justify-between shadow-sm">
+                    <div className="space-y-1">
+                        <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Vendido Hoy</span>
+                        <p className="text-3xl font-extrabold text-foreground tracking-tight">{formatCurrency(todayInvoiced)}</p>
+                    </div>
+                    <div className="p-3 bg-primary/10 text-primary rounded-xl">
+                        <TrendingUp className="w-7 h-7" />
+                    </div>
+                </div>
+                <div className="bg-card rounded-xl border border-border p-5 flex items-center justify-between shadow-sm">
+                    <div className="space-y-1">
+                        <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Efectivo en Caja</span>
+                        <p className={`text-3xl font-extrabold tracking-tight ${cashInHand >= 0 ? "text-emerald-500" : "text-destructive"}`}>
+                            {formatCurrency(cashInHand)}
+                        </p>
+                    </div>
+                    <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl">
+                        <DollarSign className="w-7 h-7" />
+                    </div>
+                </div>
             </div>
 
             {/* Monthly balance */}

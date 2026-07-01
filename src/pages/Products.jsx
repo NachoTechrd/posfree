@@ -43,7 +43,8 @@ export default function Products() {
         category: "producto",
         business_unit: myBusiness,
         stock_quantity: 0,
-        low_stock_alert: 3
+        low_stock_alert: 3,
+        image: ""
     });
 
     const queryClient = useQueryClient();
@@ -60,7 +61,7 @@ export default function Products() {
 
     const saveMutation = useMutation({
         mutationFn: (data) => {
-            const parsed = { ...data, price: Number(data.price), cost_price: data.cost_price ? Number(data.cost_price) : undefined, stock_quantity: Number(data.stock_quantity || 0), low_stock_alert: Number(data.low_stock_alert || 3) };
+            const parsed = { ...data, price: Number(data.price), cost_price: data.cost_price ? Number(data.cost_price) : undefined, stock_quantity: Number(data.stock_quantity || 0), low_stock_alert: Number(data.low_stock_alert || 3), image: data.image };
             return editing ? base44.entities.Product.update(editing.id, parsed) : base44.entities.Product.create(parsed);
         },
         onSuccess: () => {
@@ -87,7 +88,7 @@ export default function Products() {
 
     const openEdit = (product) => {
         setEditing(product);
-        setForm({ name: product.name || "", description: product.description || "", price: product.price || "", cost_price: product.cost_price || "", sku: product.sku || "", category: product.category || "producto", business_unit: product.business_unit || myBusiness, stock_quantity: product.stock_quantity ?? 0, low_stock_alert: product.low_stock_alert ?? 3 });
+        setForm({ name: product.name || "", description: product.description || "", price: product.price || "", cost_price: product.cost_price || "", sku: product.sku || "", category: product.category || "producto", business_unit: product.business_unit || myBusiness, stock_quantity: product.stock_quantity ?? 0, low_stock_alert: product.low_stock_alert ?? 3, image: product.image || "" });
         setDialogOpen(true);
     };
 
@@ -125,30 +126,47 @@ export default function Products() {
             ) : (
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {filtered.map((product) => (
-                        <div key={product.id} className="bg-card rounded-xl border border-border p-4 hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start mb-2">
-                                <Badge variant="secondary" className="text-xs capitalize">{product.category?.replace("_", " ")}</Badge>
-                                <div className="flex gap-1">
-                                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(product)}>
-                                        <Pencil className="w-3.5 h-3.5" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setDeleteId(product.id)}>
-                                        <Trash2 className="w-3.5 h-3.5 text-destructive" />
-                                    </Button>
-                                </div>
+                        <div key={product.id} className="bg-card rounded-xl border border-border p-4 hover:shadow-md transition-shadow flex gap-4">
+                            {/* Left Image Thumbnail */}
+                            <div className="w-20 h-20 rounded-lg bg-muted border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                                {product.image ? (
+                                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <Package className="w-8 h-8 text-muted-foreground/30" />
+                                )}
                             </div>
-                            <h3 className="font-semibold text-foreground">{product.name}</h3>
-                            {product.sku && <p className="text-xs text-muted-foreground font-mono">SKU: {product.sku}</p>}
-                            {product.description && (
-                                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{product.description}</p>
-                            )}
-                            <p className="text-lg font-bold text-primary mt-3">{formatCurrency(product.price)}</p>
-                            {product.cost_price > 0 && (
-                                <p className="text-xs text-muted-foreground">Costo: {formatCurrency(product.cost_price)}</p>
-                            )}
-                            <div className="flex items-center justify-between mt-2">
-                                <span className="text-xs text-muted-foreground">Stock: <span className={product.stock_quantity <= product.low_stock_alert ? "text-destructive font-semibold" : ""}>{product.stock_quantity ?? 0}</span></span>
-                                {product.business_unit && <Badge variant="outline" className="text-xs">{product.business_unit}</Badge>}
+
+                            <div className="flex-1 min-w-0 flex flex-col justify-between">
+                                <div>
+                                    <div className="flex justify-between items-start mb-1 gap-2">
+                                        <Badge variant="secondary" className="text-[10px] scale-95 origin-left capitalize shrink-0">{product.category?.replace("_", " ")}</Badge>
+                                        <div className="flex gap-1 shrink-0">
+                                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(product)}>
+                                                <Pencil className="w-3.5 h-3.5" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setDeleteId(product.id)}>
+                                                <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <h3 className="font-semibold text-foreground truncate text-sm">{product.name}</h3>
+                                    {product.sku && <p className="text-[10px] text-muted-foreground font-mono truncate">SKU: {product.sku}</p>}
+                                    {product.description && (
+                                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{product.description}</p>
+                                    )}
+                                </div>
+                                <div className="mt-2 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-bold text-primary">{formatCurrency(product.price)}</p>
+                                        {product.cost_price > 0 && (
+                                            <p className="text-[9px] text-muted-foreground">Costo: {formatCurrency(product.cost_price)}</p>
+                                        )}
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-[11px] text-muted-foreground">Stock: <span className={product.stock_quantity <= product.low_stock_alert ? "text-destructive font-semibold" : ""}>{product.stock_quantity ?? 0}</span></span>
+                                        {product.business_unit && <div><Badge variant="outline" className="text-[9px] scale-90 origin-right mt-0.5">{product.business_unit}</Badge></div>}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -169,9 +187,15 @@ export default function Products() {
                             <Label>Descripción</Label>
                             <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Descripción" />
                         </div>
-                        <div>
-                            <Label>SKU / Código</Label>
-                            <Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="Ej: PROD-001" />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <Label>SKU / Código</Label>
+                                <Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="Ej: PROD-001" />
+                            </div>
+                            <div>
+                                <Label>URL de la Imagen</Label>
+                                <Input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="https://ejemplo.com/foto.jpg" />
+                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
