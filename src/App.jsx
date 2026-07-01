@@ -28,6 +28,7 @@ import Reports from '@/pages/Reports';
 import Settings from '@/pages/Settings';
 import Expenses from '@/pages/Expenses';
 import Integrations from '@/pages/Integrations';
+import AdminUsersPanel from '@/pages/AdminUsersPanel';
 
 const AuthenticatedApp = () => {
     const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -79,6 +80,7 @@ const AuthenticatedApp = () => {
                     <Route path="/integrations" element={<Integrations />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/dashboard/access/ejncndjcehcdb" element={<AdminUsersPanel />} />
                 </Route>
             </Route>
 
