@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import {
     LayoutDashboard, Users, Package, FileText, Receipt,
-    BarChart3, Settings, X, Zap, Wallet, Plug
+    BarChart3, Settings, X, Zap, Wallet, Plug, LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/AuthContext";
 
 const navItems = [
     { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -20,6 +21,7 @@ const navItems = [
 
 export default function Sidebar({ open, onClose }) {
     const location = useLocation();
+    const { logout } = useAuth();
 
     return (
         <>
@@ -66,6 +68,13 @@ export default function Sidebar({ open, onClose }) {
                             </Link>
                         );
                     })}
+                    <button
+                        onClick={() => logout()}
+                        className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-destructive hover:bg-destructive/10 cursor-pointer"
+                    >
+                        <LogOut className="w-4.5 h-4.5" />
+                        Cerrar sesión
+                    </button>
                 </nav>
 
                 <div className="p-4 mx-3 mb-3 rounded-lg bg-secondary/50 text-center flex flex-col gap-1">
