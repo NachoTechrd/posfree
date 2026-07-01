@@ -7,7 +7,7 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
             <div className="w-full max-w-md">
                 <div className="text-center mb-10">
                     <div className="flex items-center justify-center gap-2.5 mb-6">
-                        <img src="/logo.png" alt="POSENT Logo" className="w-9 h-9 object-contain" />
+                        <img src="/posent-logo.png" alt="POSENT Logo" className="w-9 h-9 object-contain" />
                         <span className="text-xl font-bold text-foreground">POSENT Free</span>
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight text-foreground">{title}</h1>

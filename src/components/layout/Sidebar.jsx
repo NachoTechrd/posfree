@@ -37,7 +37,7 @@ export default function Sidebar({ open, onClose }) {
             )}>
                 <div className="p-6 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2.5" onClick={onClose}>
-                        <img src="/logo.png" alt="POSENT Logo" className="w-8 h-8 object-contain" />
+                        <img src="/posent-logo.png" alt="POSENT Logo" className="w-8 h-8 object-contain" />
                         <div>
                             <h1 className="text-lg font-bold tracking-tight text-foreground">POSENT Free</h1>
                         </div>
