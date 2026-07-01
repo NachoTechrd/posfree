@@ -12,6 +12,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import Landing from '@/pages/Landing';
 
 import AppLayout from '@/components/layout/AppLayout';
 import Dashboard from '@/pages/Dashboard';
@@ -56,6 +57,13 @@ const AuthenticatedApp = () => {
 
     return (
         <Routes>
+            {/* Landing page para no autenticados, Dashboard para autenticados */}
+            <Route path="/" element={<ProtectedRoute unauthenticatedElement={<Landing />} />}>
+                <Route element={<AppLayout />}>
+                    <Route index element={<Dashboard />} />
+                </Route>
+            </Route>
+
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -63,7 +71,6 @@ const AuthenticatedApp = () => {
 
             <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
                 <Route element={<AppLayout />}>
-                    <Route path="/" element={<Dashboard />} />
                     <Route path="/clients" element={<Clients />} />
                     <Route path="/clients/new" element={<Clients />} />
                     <Route path="/clients/:id" element={<ClientDetail />} />
