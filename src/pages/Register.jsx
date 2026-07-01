@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
-import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Register() {
@@ -18,6 +17,72 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
     const [showOtp, setShowOtp] = useState(false);
     const [otpCode, setOtpCode] = useState("");
+
+    useEffect(() => {
+        const loadGoogleScript = () => {
+            return new Promise((resolve) => {
+                if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) {
+                    resolve();
+                    return;
+                }
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.async = true;
+                script.defer = true;
+                script.onload = () => resolve();
+                document.body.appendChild(script);
+            });
+        };
+
+        const initializeGoogle = async () => {
+            try {
+                await loadGoogleScript();
+                if (!window.google) return;
+
+                window.google.accounts.id.initialize({
+                    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1090069992500-etv0mm1jq5tkhvm3m54reu785u60tse6.apps.googleusercontent.com',
+                    callback: async (response) => {
+                        if (!response.credential) {
+                            setError("No se pudo obtener el token de Google");
+                            return;
+                        }
+                        setLoading(true);
+                        setError("");
+                        try {
+                            await base44.auth.loginWithGoogle(response.credential);
+                            window.location.href = "/";
+                        } catch (err) {
+                            setError(err.message || "Error al registrarse con Google");
+                        } finally {
+                            setLoading(false);
+                        }
+                    },
+                    auto_select: false,
+                    cancel_on_tap_outside: true,
+                    use_fedcm_for_prompt: false,
+                });
+
+                const container = document.getElementById('googleRegisterBtnContainer');
+                if (container) {
+                    window.google.accounts.id.renderButton(container, {
+                        type: 'standard',
+                        theme: 'outline',
+                        size: 'large',
+                        text: 'signup_with',
+                        shape: 'rectangular',
+                        logo_alignment: 'left',
+                        width: container.clientWidth || 384,
+                    });
+                }
+            } catch (err) {
+                console.error('Error al inicializar Google Sign-In para registro:', err);
+            }
+        };
+
+        if (!showOtp) {
+            initializeGoogle();
+        }
+    }, [showOtp]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -64,10 +129,6 @@ export default function Register() {
         } catch (err) {
             setError(err.message || "Error al reenviar código");
         }
-    };
-
-    const handleGoogle = () => {
-        base44.auth.loginWithProvider("google", "/");
     };
 
     if (showOtp) {
@@ -138,24 +199,6 @@ export default function Register() {
                 </>
             }
         >
-            <Button
-                variant="outline"
-                className="w-full h-12 text-sm font-medium mb-6"
-                onClick={handleGoogle}
-            >
-                <GoogleIcon className="w-5 h-5 mr-2" />
-                Continuar con Google
-            </Button>
-
-            <div className="relative mb-6">
-                <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-3 text-muted-foreground">o</span>
-                </div>
-            </div>
-
             {error && (
                 <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
                     {error}
@@ -223,6 +266,19 @@ export default function Register() {
                     )}
                 </Button>
             </form>
+
+            <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">O continúa con</span>
+                </div>
+            </div>
+
+            <div className="flex justify-center w-full min-h-[44px]">
+                <div id="googleRegisterBtnContainer" className="w-full flex justify-center" />
+            </div>
         </AuthLayout>
     );
 }

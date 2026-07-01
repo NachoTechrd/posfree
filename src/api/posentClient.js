@@ -32,6 +32,17 @@ export const posent = {
         throw new Error(err.response?.data?.message || 'Error en inicio de sesión');
       }
     },
+    loginWithGoogle: async (googleToken) => {
+      try {
+        const res = await api.post('/auth/google', { token: googleToken });
+        if (res.data && res.data.token) {
+          localStorage.setItem('posent_access_token', res.data.token);
+        }
+        return res.data?.user;
+      } catch (err) {
+        throw new Error(err.response?.data?.message || 'Error en inicio de sesión con Google');
+      }
+    },
     register: async ({ email, password }) => {
       try {
         const namePart = email.split('@')[0];
