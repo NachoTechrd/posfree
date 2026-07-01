@@ -11,47 +11,23 @@ const statusConfig = {
     rechazada: { label: "RECHAZADA", bg: "#fee2e2", color: "#dc2626", border: "#fca5a5" },
 };
 
-// Simple barcode-like visual (decorative)
+// Barcode component using bwip-js API
 function BarcodeStripes({ value = "" }) {
-    // Generate pseudo-random stripe widths from string
-    const stripes = Array.from({ length: 40 }, (_, i) => {
-        const char = value.charCodeAt(i % value.length) || 50;
-        return (char % 3) + 1;
-    });
+    const cleanValue = (value || "").trim();
+    if (!cleanValue) return null;
+    const barcodeUrl = `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(cleanValue)}&scale=2&rotate=N&includeText=false`;
     return (
-        <div style={{ display: "flex", alignItems: "flex-end", height: "40px", gap: "1px" }}>
-            {stripes.map((w, i) => (
-                <div
-                    key={i}
-                    style={{
-                        width: `${w}px`,
-                        height: i % 5 === 0 ? "40px" : i % 2 === 0 ? "32px" : "28px",
-                        background: "#0f172a",
-                        flexShrink: 0,
-                    }}
-                />
-            ))}
-        </div>
+        <img src={barcodeUrl} alt="Barcode" style={{ width: "130px", height: "35px", objectFit: "contain" }} />
     );
 }
 
-// Simple QR-like visual (decorative grid)
+// QR Code component using qrserver API
 function QRCode({ value = "" }) {
-    const size = 7;
-    const cells = Array.from({ length: size * size }, (_, i) => {
-        const char = value.charCodeAt(i % value.length) || 0;
-        return (char + i) % 3 !== 0;
-    });
-    // Force corner squares (QR style)
-    const cornerCells = [0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 27, 28, 34, 35, 41, 42, 43, 44, 45, 46, 47, 48];
-    cornerCells.forEach((c) => { if (c < cells.length) cells[c] = true; });
-
+    const cleanValue = (value || "").trim();
+    if (!cleanValue) return null;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(cleanValue)}`;
     return (
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${size}, 6px)`, gap: "1px" }}>
-            {cells.map((filled, i) => (
-                <div key={i} style={{ width: "6px", height: "6px", background: filled ? "#0f172a" : "#fff", border: "0.5px solid #e2e8f0" }} />
-            ))}
-        </div>
+        <img src={qrUrl} alt="QR Code" style={{ width: "80px", height: "80px" }} />
     );
 }
 

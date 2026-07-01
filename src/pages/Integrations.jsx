@@ -39,7 +39,6 @@ function IntegrationCard({ title, logo, connected, children }) {
 
 export default function Integrations() {
     const queryClient = useQueryClient();
-    const [testingPosent, setTestingPosent] = useState(false);
     const [testingWhabot, setTestingWhabot] = useState(false);
     const [form, setForm] = useState({
         posent_webhook_url: "",
@@ -84,6 +83,10 @@ export default function Integrations() {
             queryClient.invalidateQueries({ queryKey: ["settings"] });
             toast.success("Configuración guardada");
         },
+        onError: (err) => {
+            const message = err.response?.data?.message || err.message || "Error al guardar la configuración";
+            toast.error(message);
+        }
     });
 
     const save = (patch) => {
@@ -93,12 +96,21 @@ export default function Integrations() {
     };
 
     const handleTest = async (system) => {
-        const url = system === "posent" ? form.posent_webhook_url : form.whabot_webhook_url;
-        if (!url) { toast.error("Ingresa una URL de webhook primero"); return; }
-        system === "posent" ? setTestingPosent(true) : setTestingWhabot(true);
-        await new Promise((r) => setTimeout(r, 1500));
-        system === "posent" ? setTestingPosent(false) : setTestingWhabot(false);
-        toast.success("Conexión de prueba enviada (verificar logs en " + (system === "posent" ? "POSENT PRO" : "Whabot Pro") + ")");
+        if (system !== "whabot") return;
+        if (!form.whabot_webhook_url || !form.whabot_api_key) { 
+            toast.error("Ingresa la URL del Webhook y la API Key primero"); 
+            return; 
+        }
+        setTestingWhabot(true);
+        
+        try {
+            await saveMutation.mutateAsync(form);
+            toast.success("Conexión exitosa: Tu cuenta de Whabot Pro está validada y lista.");
+        } catch (err) {
+            console.error('Error al probar conexion:', err);
+        } finally {
+            setTestingWhabot(false);
+        }
     };
 
     const copyApiKey = () => {
@@ -112,7 +124,6 @@ export default function Integrations() {
         toast.success("API Key regenerada y guardada");
     };
 
-    const posentConnected = !!(form.posent_webhook_url && form.posent_api_key);
     const whabotConnected = !!(form.whabot_webhook_url && form.whabot_api_key);
 
     const endpoint = `${window.location.origin}/api/webhook/invoices`;
@@ -125,50 +136,6 @@ export default function Integrations() {
                 </h1>
                 <p className="text-sm text-muted-foreground mt-1">Conecta POSENT Free con tus sistemas externos</p>
             </div>
-
-            {/* POSENT PRO */}
-            <IntegrationCard title="POSENT PRO" logo="🏪" connected={posentConnected}>
-                <div className="space-y-4">
-                    <div>
-                        <Label>URL del Webhook</Label>
-                        <Input
-                            value={form.posent_webhook_url}
-                            onChange={(e) => setForm({ ...form, posent_webhook_url: e.target.value })}
-                            onBlur={() => saveMutation.mutate(form)}
-                            placeholder="https://miposent.vercel.app/api/notify"
-                        />
-                    </div>
-                    <div>
-                        <Label>API Key de POSENT PRO</Label>
-                        <Input
-                            type="password"
-                            value={form.posent_api_key}
-                            onChange={(e) => setForm({ ...form, posent_api_key: e.target.value })}
-                            onBlur={() => saveMutation.mutate(form)}
-                            placeholder="pk_live_..."
-                        />
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                        <div>
-                            <p className="text-sm font-medium text-foreground">Sincronización automática</p>
-                            <p className="text-xs text-muted-foreground">Recibir facturas desde POSENT PRO automáticamente</p>
-                        </div>
-                        <Switch
-                            checked={form.posent_active}
-                            onCheckedChange={(v) => save({ posent_active: v })}
-                        />
-                    </div>
-                    <Button
-                        variant="outline"
-                        onClick={() => handleTest("posent")}
-                        disabled={testingPosent}
-                        className="gap-2"
-                    >
-                        {testingPosent ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plug className="w-4 h-4" />}
-                        Probar conexión
-                    </Button>
-                </div>
-            </IntegrationCard>
 
             {/* Whabot Pro */}
             <IntegrationCard title="Whabot Pro" logo="💬" connected={whabotConnected}>
