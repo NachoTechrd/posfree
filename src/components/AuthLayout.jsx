@@ -7,10 +7,8 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
             <div className="w-full max-w-md">
                 <div className="text-center mb-10">
                     <div className="flex items-center justify-center gap-2.5 mb-6">
-                        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                            <Zap className="w-5 h-5 text-primary-foreground" />
-                        </div>
-                        <span className="text-xl font-bold text-foreground">NachoFacturas</span>
+                        <img src="/logo.png" alt="POSENT Logo" className="w-9 h-9 object-contain" />
+                        <span className="text-xl font-bold text-foreground">POSENT Free</span>
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight text-foreground">{title}</h1>
                     {subtitle && <p className="text-muted-foreground mt-2">{subtitle}</p>}
@@ -22,7 +20,7 @@ export default function AuthLayout({ icon: Icon, title, subtitle, footer, childr
                     <p className="text-center text-sm text-muted-foreground mt-6">{footer}</p>
                 )}
                 <p className="text-center text-[10px] text-muted-foreground mt-4">
-                    Powered by <span className="font-semibold text-foreground">NachoTechRD</span>
+                    Powered by <a href="https://posentrd.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">POSENT PRO</a>
                 </p>
             </div>
         </div>

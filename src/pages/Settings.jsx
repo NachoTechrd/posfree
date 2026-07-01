@@ -160,7 +160,7 @@ export default function Settings() {
             </div>
 
             <div className="text-center">
-                <p className="text-xs text-muted-foreground">Powered by <span className="font-semibold text-foreground">NachoTechRD</span></p>
+                <p className="text-xs text-muted-foreground">Powered by <a href="https://posentrd.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground hover:underline">POSENT PRO</a></p>
             </div>
         </div>
     );

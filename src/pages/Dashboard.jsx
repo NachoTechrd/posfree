@@ -2,20 +2,17 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/AuthContext";
 import { FileText, Receipt, DollarSign, Clock, Plus, ArrowRight, TrendingDown, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StatCard from "@/components/shared/StatCard";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
-const BUSINESS_UNITS = ["NachoTechRD", "POSENT PRO", "Whabot Pro", "NTDESWEB"];
 const LEAD_SOURCES = ["WhatsApp", "TikTok", "Instagram", "Facebook", "Referido", "Presencial", "Web", "Otro"];
 
 const unitColors = {
-    "NachoTechRD": "bg-blue-500",
-    "POSENT PRO": "bg-purple-500",
-    "Whabot Pro": "bg-green-500",
-    "NTDESWEB": "bg-orange-500",
+    "General": "bg-blue-500",
 };
 
 const sourceIcons = {
@@ -61,13 +58,21 @@ export default function Dashboard() {
     const monthBalance = monthIncome - monthExpenses;
 
     // By business unit
+    const { user } = useAuth();
+    const BUSINESS_UNITS = useMemo(() => {
+        const units = new Set(invoices.map(i => i.business_unit).filter(Boolean));
+        const userBiz = user?.negocio?.nombre || user?.nombre || "Mi Negocio";
+        units.add(userBiz);
+        return Array.from(units);
+    }, [invoices, user]);
+
     const byUnit = useMemo(() =>
         BUSINESS_UNITS.map((unit) => ({
             unit,
             total: invoices.filter((i) => i.business_unit === unit).reduce((s, i) => s + (i.total || 0), 0),
             count: invoices.filter((i) => i.business_unit === unit).length,
         })).filter((u) => u.count > 0),
-        [invoices]
+        [invoices, BUSINESS_UNITS]
     );
 
     const maxUnit = byUnit.length ? Math.max(...byUnit.map((u) => u.total)) : 1;

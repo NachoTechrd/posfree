@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Receipt, Plus, Search, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,19 +25,6 @@ const categories = [
     { value: "otro", label: "Otro" },
 ];
 
-const businessUnits = ["NachoTechRD", "POSENT PRO", "Whabot Pro", "NTDESWEB", "General"];
-
-const emptyExpense = {
-    description: "",
-    amount: "",
-    expense_date: new Date().toISOString().split("T")[0],
-    category: "otro",
-    business_unit: "NachoTechRD",
-    supplier: "",
-    payment_method: "efectivo",
-    notes: "",
-};
-
 const categoryColors = {
     inventario: "bg-blue-100 text-blue-700",
     alquiler: "bg-purple-100 text-purple-700",
@@ -49,11 +37,26 @@ const categoryColors = {
 };
 
 export default function Expenses() {
+    const { user } = useAuth();
+    const myBusiness = user?.negocio?.nombre || user?.nombre || "Mi Negocio";
+    const businessUnits = [myBusiness, "General"];
+
+    const getEmptyExpense = () => ({
+        description: "",
+        amount: "",
+        expense_date: new Date().toISOString().split("T")[0],
+        category: "otro",
+        business_unit: myBusiness,
+        supplier: "",
+        payment_method: "efectivo",
+        notes: "",
+    });
+
     const queryClient = useQueryClient();
     const [search, setSearch] = useState("");
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editing, setEditing] = useState(null);
-    const [form, setForm] = useState(emptyExpense);
+    const [form, setForm] = useState(getEmptyExpense);
     const [deleteId, setDeleteId] = useState(null);
 
     const { data: expenses = [], isLoading } = useQuery({
@@ -72,7 +75,7 @@ export default function Expenses() {
             queryClient.invalidateQueries({ queryKey: ["expenses"] });
             setDialogOpen(false);
             setEditing(null);
-            setForm(emptyExpense);
+            setForm(getEmptyExpense());
         },
     });
 
@@ -107,7 +110,7 @@ export default function Expenses() {
             amount: exp.amount || "",
             expense_date: exp.expense_date || "",
             category: exp.category || "otro",
-            business_unit: exp.business_unit || "NachoTechRD",
+            business_unit: exp.business_unit || myBusiness,
             supplier: exp.supplier || "",
             payment_method: exp.payment_method || "efectivo",
             notes: exp.notes || "",
@@ -117,7 +120,7 @@ export default function Expenses() {
 
     const openNew = () => {
         setEditing(null);
-        setForm(emptyExpense);
+        setForm(getEmptyExpense());
         setDialogOpen(true);
     };
 

@@ -1,4 +1,5 @@
 import { formatCurrency, formatDate } from "@/lib/formatters";
+import { useAuth } from "@/lib/AuthContext";
 
 // Simple barcode visual
 function BarcodeStripes({ value = "" }) {
@@ -34,8 +35,10 @@ function QRCode({ value = "" }) {
 }
 
 export default function DocumentTicket({ type = "invoice", doc, biz }) {
+    const { user } = useAuth();
     const isInvoice = type === "invoice";
     const docNumber = isInvoice ? doc.invoice_number : doc.quote_number;
+    const businessName = biz?.business_name || user?.negocio?.nombre || user?.nombre || "Mi Negocio";
 
     return (
         <div
@@ -59,7 +62,7 @@ export default function DocumentTicket({ type = "invoice", doc, biz }) {
                         <img src={biz.logo_url} alt="logo" style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "6px" }} />
                     </div>
                 )}
-                <div style={{ fontSize: "12px", fontWeight: 900, letterSpacing: "0.05em" }}>{biz?.business_name || "NachoTechRD"}</div>
+                <div style={{ fontSize: "12px", fontWeight: 900, letterSpacing: "0.05em" }}>{businessName}</div>
                 {biz?.address && <div style={{ fontSize: "8px", color: "#444" }}>{biz.address}</div>}
                 {biz?.phone && <div style={{ fontSize: "8px", color: "#444" }}>Tel: {biz.phone}</div>}
                 {biz?.email && <div style={{ fontSize: "8px", color: "#444" }}>{biz.email}</div>}
@@ -153,7 +156,7 @@ export default function DocumentTicket({ type = "invoice", doc, biz }) {
                     {(docNumber || "").replace(/\D/g, "").padEnd(12, "0").slice(0, 12)}
                 </div>
                 <div style={{ fontSize: "7px", color: "#888", marginTop: "2px" }}>
-                    Gracias por su preferencia · NachoFacturas
+                    Gracias por su preferencia · POSENT Free
                 </div>
             </div>
         </div>

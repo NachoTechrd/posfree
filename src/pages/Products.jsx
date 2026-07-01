@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Package, Plus, Search, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,15 +29,28 @@ const categories = [
     { value: "otro", label: "Otro" },
 ];
 
-const businessUnits = ["NachoTechRD", "POSENT PRO", "Whabot Pro", "NTDESWEB", "General"];
-const emptyProduct = { name: "", description: "", price: "", cost_price: "", sku: "", category: "producto", business_unit: "NachoTechRD", stock_quantity: 0, low_stock_alert: 3 };
-
 export default function Products() {
+    const { user } = useAuth();
+    const myBusiness = user?.negocio?.nombre || user?.nombre || "Mi Negocio";
+    const businessUnits = [myBusiness, "General"];
+
+    const getEmptyProduct = () => ({
+        name: "",
+        description: "",
+        price: "",
+        cost_price: "",
+        sku: "",
+        category: "producto",
+        business_unit: myBusiness,
+        stock_quantity: 0,
+        low_stock_alert: 3
+    });
+
     const queryClient = useQueryClient();
     const [search, setSearch] = useState("");
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editing, setEditing] = useState(null);
-    const [form, setForm] = useState(emptyProduct);
+    const [form, setForm] = useState(getEmptyProduct);
     const [deleteId, setDeleteId] = useState(null);
 
     const { data: products = [], isLoading } = useQuery({
@@ -53,7 +67,7 @@ export default function Products() {
             queryClient.invalidateQueries({ queryKey: ["products"] });
             setDialogOpen(false);
             setEditing(null);
-            setForm(emptyProduct);
+            setForm(getEmptyProduct());
         },
     });
 
@@ -73,13 +87,13 @@ export default function Products() {
 
     const openEdit = (product) => {
         setEditing(product);
-        setForm({ name: product.name || "", description: product.description || "", price: product.price || "", cost_price: product.cost_price || "", sku: product.sku || "", category: product.category || "producto", business_unit: product.business_unit || "NachoTechRD", stock_quantity: product.stock_quantity ?? 0, low_stock_alert: product.low_stock_alert ?? 3 });
+        setForm({ name: product.name || "", description: product.description || "", price: product.price || "", cost_price: product.cost_price || "", sku: product.sku || "", category: product.category || "producto", business_unit: product.business_unit || myBusiness, stock_quantity: product.stock_quantity ?? 0, low_stock_alert: product.low_stock_alert ?? 3 });
         setDialogOpen(true);
     };
 
     const openNew = () => {
         setEditing(null);
-        setForm(emptyProduct);
+        setForm(getEmptyProduct());
         setDialogOpen(true);
     };
 

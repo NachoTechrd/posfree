@@ -123,7 +123,7 @@ export default function Integrations() {
                 <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
                     <Plug className="w-6 h-6 text-primary" /> Integraciones
                 </h1>
-                <p className="text-sm text-muted-foreground mt-1">Conecta NachoFacturas con tus sistemas externos</p>
+                <p className="text-sm text-muted-foreground mt-1">Conecta POSENT Free con tus sistemas externos</p>
             </div>
 
             {/* POSENT PRO */}
@@ -241,7 +241,7 @@ export default function Integrations() {
                     <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-xl">🔑</div>
                     <div>
                         <h2 className="text-lg font-semibold text-foreground">Configuración de API (recibir datos)</h2>
-                        <p className="text-xs text-muted-foreground">Usa estas credenciales en sistemas externos para enviar datos a NachoFacturas</p>
+                        <p className="text-xs text-muted-foreground">Usa estas credenciales en sistemas externos para enviar datos a POSENT Free</p>
                     </div>
                 </div>
 

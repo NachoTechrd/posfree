@@ -1,4 +1,5 @@
 import { formatCurrency, formatDate } from "@/lib/formatters";
+import { useAuth } from "@/lib/AuthContext";
 
 const statusConfig = {
     pagada: { label: "PAGADA", bg: "#dcfce7", color: "#16a34a", border: "#86efac" },
@@ -55,9 +56,11 @@ function QRCode({ value = "" }) {
 }
 
 export default function DocumentClassic({ type = "invoice", doc, biz }) {
+    const { user } = useAuth();
     const isInvoice = type === "invoice";
     const docNumber = isInvoice ? doc.invoice_number : doc.quote_number;
     const status = statusConfig[doc.status] || statusConfig.pendiente;
+    const businessName = biz?.business_name || user?.negocio?.nombre || user?.nombre || "Mi Negocio";
 
     return (
         <div id="doc-printable" style={{ fontFamily: "'Inter', sans-serif", background: "#fff", maxWidth: "860px", margin: "0 auto", border: "1px solid #e2e8f0", borderRadius: "8px", overflow: "hidden" }}>
@@ -71,7 +74,7 @@ export default function DocumentClassic({ type = "invoice", doc, biz }) {
                         <div style={{ width: "52px", height: "52px", background: "#f1f5f9", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "22px" }}>📱</div>
                     )}
                     <div>
-                        <div style={{ fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>{biz?.business_name || "NachoTechRD"}</div>
+                        <div style={{ fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>{businessName}</div>
                         <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>Reparación · Tecnología · Soluciones Digitales</div>
                         {biz?.phone && <div style={{ fontSize: "11px", color: "#64748b" }}>{biz.phone}</div>}
                         {biz?.email && <div style={{ fontSize: "11px", color: "#64748b" }}>{biz.email}</div>}
@@ -85,6 +88,14 @@ export default function DocumentClassic({ type = "invoice", doc, biz }) {
                     <div style={{ marginTop: "8px", display: "inline-flex", alignItems: "center", padding: "3px 10px", borderRadius: "4px", background: status.bg, color: status.color, border: `1px solid ${status.border}`, fontSize: "10px", fontWeight: 700, letterSpacing: "0.06em" }}>
                         {status.label}
                     </div>
+                </div>
+            </div>
+
+            {/* Billing Details */}
+            <div style={{ padding: "32px 32px 24px 32px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
+                <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>EMISOR</div>
+                    <div style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>{businessName}</div>
                 </div>
             </div>
 
@@ -116,7 +127,7 @@ export default function DocumentClassic({ type = "invoice", doc, biz }) {
                 </div>
                 <div style={{ padding: "16px 24px" }}>
                     <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>Empresa</div>
-                    <div style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>{biz?.business_name || "NachoTechRD"}</div>
+                    <div style={{ fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>{businessName}</div>
                     {biz?.address && <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>{biz.address}</div>}
                 </div>
             </div>
@@ -239,7 +250,7 @@ export default function DocumentClassic({ type = "invoice", doc, biz }) {
                 <div style={{ fontSize: "11px", color: "#64748b" }}>
                     {doc.notes || biz?.default_notes || "Gracias por su preferencia."}
                 </div>
-                <div style={{ fontSize: "10px", color: "#94a3b8" }}>Generado por <span style={{ color: "#0f172a", fontWeight: 700 }}>NachoFacturas</span></div>
+                <div style={{ fontSize: "10px", color: "#94a3b8" }}>Generado por <span style={{ color: "#0f172a", fontWeight: 700 }}>POSENT Free</span></div>
             </div>
         </div>
     );

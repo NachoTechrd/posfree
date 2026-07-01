@@ -35,11 +35,9 @@ export default function Sidebar({ open, onClose }) {
             )}>
                 <div className="p-6 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2.5" onClick={onClose}>
-                        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-                            <Zap className="w-5 h-5 text-primary-foreground" />
-                        </div>
+                        <img src="/logo.png" alt="POSENT Logo" className="w-8 h-8 object-contain" />
                         <div>
-                            <h1 className="text-lg font-bold tracking-tight text-foreground">NachoFacturas</h1>
+                            <h1 className="text-lg font-bold tracking-tight text-foreground">POSENT Free</h1>
                         </div>
                     </Link>
                     <Button variant="ghost" size="icon" className="lg:hidden" onClick={onClose}>
@@ -70,10 +68,19 @@ export default function Sidebar({ open, onClose }) {
                     })}
                 </nav>
 
-                <div className="p-4 mx-3 mb-3 rounded-lg bg-secondary/50 text-center">
+                <div className="p-4 mx-3 mb-3 rounded-lg bg-secondary/50 text-center flex flex-col gap-1">
                     <p className="text-[10px] text-muted-foreground">
-                        Powered by <span className="font-semibold text-foreground">NachoTechRD</span>
+                        Estás en la versión gratuita de
                     </p>
+                    <p className="text-xs font-bold text-foreground">POSENT Free</p>
+                    <a 
+                        href="https://posentrd.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-[11px] text-primary font-bold hover:underline mt-1"
+                    >
+                        Prueba POSENT PRO 🚀
+                    </a>
                 </div>
             </aside>
         </>

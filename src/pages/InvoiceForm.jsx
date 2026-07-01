@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,10 @@ import DocumentTotals from "@/components/documents/DocumentTotals";
 import { generateNumber } from "@/lib/formatters";
 
 export default function InvoiceForm() {
+    const { user } = useAuth();
+    const myBusiness = user?.negocio?.nombre || user?.nombre || "Mi Negocio";
+    const businessUnits = [myBusiness, "General"];
+
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -44,7 +49,7 @@ export default function InvoiceForm() {
         issue_date: today,
         due_date: defaultDue,
         status: "pendiente",
-        business_unit: "NachoTechRD",
+        business_unit: myBusiness,
         lead_source: "",
         payment_method: "",
     });
@@ -60,7 +65,7 @@ export default function InvoiceForm() {
                 issue_date: existing.issue_date || today,
                 due_date: existing.due_date || defaultDue,
                 status: existing.status || "pendiente",
-                business_unit: existing.business_unit || "NachoTechRD",
+                business_unit: existing.business_unit || myBusiness,
                 lead_source: existing.lead_source || "",
                 payment_method: existing.payment_method || "",
             });
@@ -148,10 +153,9 @@ export default function InvoiceForm() {
                         <Select value={form.business_unit} onValueChange={(v) => setForm({ ...form, business_unit: v })}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="NachoTechRD">NachoTechRD</SelectItem>
-                                <SelectItem value="POSENT PRO">POSENT PRO</SelectItem>
-                                <SelectItem value="Whabot Pro">Whabot Pro</SelectItem>
-                                <SelectItem value="NTDESWEB">NTDESWEB</SelectItem>
+                                {businessUnits.map((unit) => (
+                                    <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@/lib/AuthContext";
 import { Printer, Pencil, DollarSign, Share2, ArrowRightLeft, Trash2, LayoutTemplate, FileText, Receipt } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/formatters";
@@ -27,10 +28,12 @@ export default function DocumentPreview({
     onWhatsApp,
     isPending,
 }) {
+    const { user } = useAuth();
     const [viewMode, setViewMode] = useState("design"); // "design" | "classic" | "ticket"
     const isInvoice = type === "invoice";
     const docNumber = isInvoice ? doc.invoice_number : doc.quote_number;
     const status = statusConfig[doc.status] || statusConfig.pendiente;
+    const businessName = biz?.business_name || user?.negocio?.nombre || user?.nombre || "Mi Negocio";
 
     const handlePrint = () => {
         const orig = document.title;
@@ -200,7 +203,7 @@ export default function DocumentPreview({
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", borderBottom: "1px solid #e2e8f0" }}>
                     <div style={{ padding: "24px 40px", borderRight: "1px solid #e2e8f0" }}>
                         <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>Facturado por</div>
-                        <div style={{ fontSize: "14px", fontWeight: 700, color: "#0f172a" }}>{biz?.business_name || "NachoTechRD"}</div>
+                        <div style={{ fontSize: "14px", fontWeight: 700, color: "#0f172a" }}>{businessName}</div>
                         {biz?.address && <div style={{ fontSize: "12px", color: "#64748b", marginTop: "3px" }}>{biz.address}</div>}
                         {biz?.email && <div style={{ fontSize: "12px", color: "#64748b" }}>{biz.email}</div>}
                         {biz?.phone && <div style={{ fontSize: "12px", color: "#64748b" }}>{biz.phone}</div>}
@@ -327,8 +330,8 @@ export default function DocumentPreview({
 
                 {/* ── BOTTOM BAR ── */}
                 <div style={{ background: "#0a1628", padding: "12px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-                    <span style={{ fontSize: "11px", color: "#475569" }}>Generado por <span style={{ color: "#06b6d4", fontWeight: 700 }}>NachoFacturas</span> · NachoTechRD</span>
-                    <span style={{ fontSize: "11px", color: "#475569" }}>© {new Date().getFullYear()} NachoTechRD. Todos los derechos reservados.</span>
+                    <span style={{ fontSize: "11px", color: "#475569" }}>Generado por <span style={{ color: "#06b6d4", fontWeight: 700 }}>POSENT Free</span> · POSENT PRO</span>
+                    <span style={{ fontSize: "11px", color: "#475569" }}>© {new Date().getFullYear()} POSENT. Todos los derechos reservados.</span>
                 </div>
             </div>}
         </>
