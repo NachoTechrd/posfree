@@ -29,6 +29,7 @@ api.interceptors.request.use((config) => {
 });
 
 export default function AdminUsersPanel() {
+  const ADMIN_KEY = (import.meta.env.VITE_ADMIN_PANEL_PATH || 'control-total').trim();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,7 +52,7 @@ export default function AdminUsersPanel() {
     try {
       setLoading(true);
       const res = await api.get('/admin/users', {
-        headers: { 'x-admin-key': 'ejncndjcehcdb' }
+        headers: { 'x-admin-key': ADMIN_KEY }
       });
       if (res.data && res.data.success) {
         setUsers(res.data.data);
@@ -108,7 +109,7 @@ export default function AdminUsersPanel() {
       };
 
       const res = await api.put(`/admin/users/${selectedUser._id}`, payload, {
-        headers: { 'x-admin-key': 'ejncndjcehcdb' }
+        headers: { 'x-admin-key': ADMIN_KEY }
       });
 
       if (res.data && res.data.success) {
@@ -130,7 +131,7 @@ export default function AdminUsersPanel() {
 
     try {
       const res = await api.delete(`/admin/users/${userId}`, {
-        headers: { 'x-admin-key': 'ejncndjcehcdb' }
+        headers: { 'x-admin-key': ADMIN_KEY }
       });
       if (res.data && res.data.success) {
         toast.success('Usuario eliminado exitosamente');

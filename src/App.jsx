@@ -32,6 +32,7 @@ import AdminUsersPanel from '@/pages/AdminUsersPanel';
 
 const AuthenticatedApp = () => {
     const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+    const adminAccessKey = (import.meta.env.VITE_ADMIN_PANEL_PATH || 'control-total').trim();
 
     if (isLoadingPublicSettings || isLoadingAuth) {
         return (
@@ -80,7 +81,7 @@ const AuthenticatedApp = () => {
                     <Route path="/integrations" element={<Integrations />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/dashboard/access/ejncndjcehcdb" element={<AdminUsersPanel />} />
+                    <Route path={`/dashboard/access/${adminAccessKey}`} element={<AdminUsersPanel />} />
                 </Route>
             </Route>
 
