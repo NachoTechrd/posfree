@@ -1,0 +1,75 @@
+{
+    "name": "Expense",
+    "type": "object",
+    "properties": {
+        "description": {
+            "type": "string",
+            "description": "Descripci\u00f3n del gasto"
+        },
+        "amount": {
+            "type": "number",
+            "description": "Monto del gasto"
+        },
+        "category": {
+            "type": "string",
+            "enum": [
+                "inventario",
+                "alquiler",
+                "servicios",
+                "marketing",
+                "nomina",
+                "herramientas",
+                "transporte",
+                "otro"
+            ],
+            "description": "Categor\u00eda del gasto"
+        },
+        "business_unit": {
+            "type": "string",
+            "enum": [
+                "NachoTechRD",
+                "POSENT PRO",
+                "Whabot Pro",
+                "NTDESWEB",
+                "General"
+            ],
+            "description": "Unidad de negocio",
+            "default": "NachoTechRD"
+        },
+        "expense_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Fecha del gasto"
+        },
+        "payment_method": {
+            "type": "string",
+            "enum": [
+                "efectivo",
+                "transferencia",
+                "tarjeta"
+            ],
+            "description": "M\u00e9todo de pago"
+        },
+        "supplier": {
+            "type": "string",
+            "description": "Proveedor o beneficiario"
+        },
+        "receipt_url": {
+            "type": "string",
+            "description": "URL del comprobante/recibo"
+        },
+        "notes": {
+            "type": "string",
+            "description": "Notas adicionales"
+        },
+        "invoice_reference": {
+            "type": "string",
+            "description": "N\u00famero de factura del proveedor"
+        }
+    },
+    "required": [
+        "description",
+        "amount",
+        "expense_date"
+    ]
+}

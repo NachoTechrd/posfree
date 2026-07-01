@@ -1,0 +1,127 @@
+{
+    "name": "Invoice",
+    "type": "object",
+    "properties": {
+        "invoice_number": {
+            "type": "string",
+            "description": "N\u00famero de factura"
+        },
+        "client_id": {
+            "type": "string",
+            "description": "ID del cliente"
+        },
+        "client_name": {
+            "type": "string",
+            "description": "Nombre del cliente"
+        },
+        "items": {
+            "type": "array",
+            "description": "L\u00edneas de la factura",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "product_id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "unit_price": {
+                        "type": "number"
+                    },
+                    "discount_percent": {
+                        "type": "number"
+                    },
+                    "subtotal": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "subtotal": {
+            "type": "number",
+            "description": "Subtotal"
+        },
+        "tax_rate": {
+            "type": "number",
+            "description": "Tasa de impuesto (ITBIS)"
+        },
+        "tax_amount": {
+            "type": "number",
+            "description": "Monto del impuesto"
+        },
+        "total": {
+            "type": "number",
+            "description": "Total"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "pendiente",
+                "pagada",
+                "vencida"
+            ],
+            "default": "pendiente",
+            "description": "Estado de la factura"
+        },
+        "issue_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Fecha de emisi\u00f3n"
+        },
+        "due_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Fecha de vencimiento"
+        },
+        "notes": {
+            "type": "string",
+            "description": "Notas"
+        },
+        "payments": {
+            "type": "array",
+            "description": "Registro de pagos",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "method": {
+                        "type": "string"
+                    },
+                    "notes": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "amount_paid": {
+            "type": "number",
+            "description": "Monto pagado"
+        },
+        "balance_due": {
+            "type": "number",
+            "description": "Saldo pendiente"
+        },
+        "quote_id": {
+            "type": "string",
+            "description": "ID de cotizaci\u00f3n asociada"
+        }
+    },
+    "required": [
+        "client_id",
+        "client_name",
+        "items"
+    ]
+}

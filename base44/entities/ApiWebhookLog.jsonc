@@ -1,0 +1,55 @@
+{
+    "name": "ApiWebhookLog",
+    "properties": {
+        "business_unit": {
+            "description": "Sistema de origen",
+            "enum": [
+                "posent_pro",
+                "whabot_pro",
+                "api_externa"
+            ],
+            "type": "string"
+        },
+        "created_invoice_id": {
+            "description": "ID de la factura creada (si aplica)",
+            "type": "string"
+        },
+        "error_message": {
+            "description": "Mensaje de error si fall\u00f3",
+            "type": "string"
+        },
+        "payload": {
+            "description": "Payload recibido en JSON string",
+            "type": "string"
+        },
+        "processed": {
+            "default": false,
+            "description": "Fue procesado correctamente",
+            "type": "boolean"
+        },
+        "request_id": {
+            "description": "ID \u00fanico del request externo",
+            "type": "string"
+        },
+        "source_ip": {
+            "description": "IP de origen",
+            "type": "string"
+        },
+        "status": {
+            "default": "received",
+            "description": "Estado del webhook",
+            "enum": [
+                "received",
+                "processed",
+                "error",
+                "duplicate"
+            ],
+            "type": "string"
+        }
+    },
+    "required": [
+        "business_unit",
+        "payload"
+    ],
+    "type": "object"
+}

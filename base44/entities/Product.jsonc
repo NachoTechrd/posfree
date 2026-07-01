@@ -1,0 +1,39 @@
+{
+    "name": "Product",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Nombre del producto o servicio"
+        },
+        "description": {
+            "type": "string",
+            "description": "Descripci\u00f3n"
+        },
+        "price": {
+            "type": "number",
+            "description": "Precio de venta"
+        },
+        "category": {
+            "type": "string",
+            "enum": [
+                "producto",
+                "servicio",
+                "instalacion",
+                "mantenimiento",
+                "consultoria",
+                "otro"
+            ],
+            "description": "Categor\u00eda"
+        },
+        "is_active": {
+            "type": "boolean",
+            "default": true,
+            "description": "Activo"
+        }
+    },
+    "required": [
+        "name",
+        "price"
+    ]
+}

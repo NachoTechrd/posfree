@@ -1,0 +1,111 @@
+{
+    "name": "BusinessSettings",
+    "type": "object",
+    "properties": {
+        "business_name": {
+            "type": "string",
+            "description": "Nombre del negocio"
+        },
+        "logo_url": {
+            "type": "string",
+            "description": "URL del logo"
+        },
+        "phone": {
+            "type": "string",
+            "description": "Tel\u00e9fono"
+        },
+        "email": {
+            "type": "string",
+            "description": "Correo electr\u00f3nico"
+        },
+        "address": {
+            "type": "string",
+            "description": "Direcci\u00f3n"
+        },
+        "website": {
+            "type": "string",
+            "description": "Sitio web"
+        },
+        "social_media": {
+            "type": "object",
+            "properties": {
+                "instagram": {
+                    "type": "string"
+                },
+                "facebook": {
+                    "type": "string"
+                },
+                "whatsapp": {
+                    "type": "string"
+                }
+            },
+            "description": "Redes sociales"
+        },
+        "currency": {
+            "type": "string",
+            "default": "DOP",
+            "description": "Moneda"
+        },
+        "tax_rate": {
+            "type": "number",
+            "default": 18,
+            "description": "Tasa ITBIS %"
+        },
+        "default_notes": {
+            "type": "string",
+            "description": "Notas por defecto en documentos"
+        },
+        "next_quote_number": {
+            "type": "number",
+            "default": 1,
+            "description": "Siguiente n\u00famero de cotizaci\u00f3n"
+        },
+        "next_invoice_number": {
+            "type": "number",
+            "default": 1,
+            "description": "Siguiente n\u00famero de factura"
+        },
+        "posent_webhook_url": {
+            "type": "string",
+            "description": "URL del Webhook de POSENT PRO"
+        },
+        "posent_api_key": {
+            "type": "string",
+            "description": "API Key de POSENT PRO"
+        },
+        "posent_active": {
+            "type": "boolean",
+            "default": false,
+            "description": "Sincronizaci\u00f3n autom\u00e1tica POSENT PRO activa"
+        },
+        "whabot_webhook_url": {
+            "type": "string",
+            "description": "URL del Webhook de Whabot Pro"
+        },
+        "whabot_api_key": {
+            "type": "string",
+            "description": "API Key de Whabot Pro"
+        },
+        "whabot_alerts_vencidas": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enviar alertas de facturas vencidas por WhatsApp"
+        },
+        "whabot_confirmacion_pago": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enviar confirmaci\u00f3n de pago por WhatsApp"
+        },
+        "whabot_phone": {
+            "type": "string",
+            "description": "N\u00famero de WhatsApp del negocio"
+        },
+        "api_key_interna": {
+            "type": "string",
+            "description": "API Key interna para recibir datos externos"
+        }
+    },
+    "required": [
+        "business_name"
+    ]
+}
