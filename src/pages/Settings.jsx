@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Settings() {
     const queryClient = useQueryClient();
+    const { checkUserAuth } = useAuth();
 
     const { data: settings = [] } = useQuery({
         queryKey: ["settings"],
@@ -54,6 +56,7 @@ export default function Settings() {
                 : base44.entities.BusinessSettings.create({ ...data, tax_rate: Number(data.tax_rate), next_quote_number: 1, next_invoice_number: 1 }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["settings"] });
+            checkUserAuth(); // Sincronizar inmediatamente el contexto de usuario
             toast.success("Configuración guardada");
         },
     });
