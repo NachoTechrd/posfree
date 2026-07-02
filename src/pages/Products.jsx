@@ -105,7 +105,7 @@ export default function Products() {
                     <h1 className="text-2xl font-bold text-foreground">Productos y Servicios</h1>
                     <p className="text-sm text-muted-foreground">{products.length} registrados</p>
                 </div>
-                <Button onClick={openNew} className="gap-2 shadow-md shadow-primary/20">
+                <Button onClick={openNew} className="gap-2 shadow-md shadow-primary/20 h-11 sm:h-9 touch-manipulation">
                     <Plus className="w-4 h-4" /> Nuevo Producto
                 </Button>
             </div>
@@ -141,11 +141,11 @@ export default function Products() {
                                     <div className="flex justify-between items-start mb-1 gap-2">
                                         <Badge variant="secondary" className="text-[10px] scale-95 origin-left capitalize shrink-0">{product.category?.replace("_", " ")}</Badge>
                                         <div className="flex gap-1 shrink-0">
-                                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(product)}>
-                                                <Pencil className="w-3.5 h-3.5" />
+                                            <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-7 sm:w-7 touch-manipulation active:scale-95 transition-transform" onClick={() => openEdit(product)}>
+                                                <Pencil className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setDeleteId(product.id)}>
-                                                <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                                            <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-7 sm:w-7 touch-manipulation active:scale-95 transition-transform" onClick={() => setDeleteId(product.id)}>
+                                                <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-destructive" />
                                             </Button>
                                         </div>
                                     </div>

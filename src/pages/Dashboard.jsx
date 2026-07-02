@@ -132,10 +132,10 @@ export default function Dashboard() {
                     <p className="text-sm text-muted-foreground mt-1">Resumen de tu negocio</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => navigate("/quotes/new")} className="gap-2">
+                    <Button variant="outline" onClick={() => navigate("/quotes/new")} className="gap-2 h-11 sm:h-9 touch-manipulation active:scale-95 transition-transform flex-1 sm:flex-initial">
                         <Plus className="w-4 h-4" /> Cotización
                     </Button>
-                    <Button onClick={() => navigate("/invoices/new")} className="gap-2 shadow-md shadow-primary/20">
+                    <Button onClick={() => navigate("/invoices/new")} className="gap-2 shadow-md shadow-primary/20 h-11 sm:h-9 touch-manipulation active:scale-95 transition-transform flex-1 sm:flex-initial">
                         <Plus className="w-4 h-4" /> Factura
                     </Button>
                 </div>

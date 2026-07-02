@@ -20,9 +20,9 @@ export default function TopBar({ onMenuClick }) {
     }, [dark]);
 
     return (
-        <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border px-4 lg:px-6 h-14 flex items-center justify-between gap-4">
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={onMenuClick}>
-                <Menu className="w-5 h-5" />
+        <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border px-4 lg:px-6 h-16 flex items-center justify-between gap-4">
+            <Button variant="ghost" size="icon" className="lg:hidden h-11 w-11 touch-manipulation active:scale-95 transition-transform" onClick={onMenuClick}>
+                <Menu className="w-6 h-6" />
             </Button>
 
             <div className="flex-1" />
@@ -32,15 +32,15 @@ export default function TopBar({ onMenuClick }) {
                     variant="ghost"
                     size="icon"
                     onClick={() => setDark(!dark)}
-                    className="text-muted-foreground"
+                    className="text-muted-foreground h-11 w-11 touch-manipulation active:scale-95 transition-transform"
                 >
-                    {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    {dark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                 </Button>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button size="sm" className="gap-2 shadow-md shadow-primary/20">
-                            <Plus className="w-4 h-4" />
+                        <Button className="h-11 w-11 sm:h-9 sm:w-auto sm:px-3 sm:py-2 gap-2 shadow-md shadow-primary/20 rounded-full sm:rounded-md touch-manipulation active:scale-95 transition-transform flex items-center justify-center shrink-0">
+                            <Plus className="w-5 h-5 sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Crear</span>
                         </Button>
                     </DropdownMenuTrigger>
@@ -63,11 +63,11 @@ export default function TopBar({ onMenuClick }) {
                 {user && (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="relative h-8 w-8 rounded-full border border-border p-0 overflow-hidden ml-1">
+                            <Button variant="ghost" className="relative h-11 w-11 sm:h-8 sm:w-8 rounded-full border border-border p-0 overflow-hidden ml-1 touch-manipulation active:scale-95 transition-transform shrink-0">
                                 {user.fotoUrl ? (
                                     <img src={user.fotoUrl} alt={user.nombre || "User"} className="h-full w-full object-cover" />
                                 ) : (
-                                    <div className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground font-semibold text-xs uppercase">
+                                    <div className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground font-semibold text-sm sm:text-xs uppercase">
                                         {(user.nombre || user.email || "U").slice(0, 2)}
                                     </div>
                                 )}
@@ -81,7 +81,7 @@ export default function TopBar({ onMenuClick }) {
                                 </div>
                             </div>
                             <DropdownMenuItem className="border-t border-border focus:bg-destructive/10 focus:text-destructive text-destructive cursor-pointer gap-2 mt-1" onClick={() => logout()}>
-                                <LogOut className="w-4 h-4" />
+                                <LogOut className="w-4.5 h-4.5" />
                                 <span>Cerrar sesión</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
