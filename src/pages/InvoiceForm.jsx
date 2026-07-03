@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+import { toast } from "sonner";
+import { getLimit } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,7 +35,6 @@ export default function InvoiceForm() {
     const { data: invoices = [] } = useQuery({
         queryKey: ["invoices"],
         queryFn: () => base44.entities.Invoice.list(),
-        enabled: isEdit,
     });
     const existing = invoices.find((inv) => inv.id === id);
 
@@ -101,6 +102,23 @@ export default function InvoiceForm() {
     });
 
     const handleSave = () => {
+        if (!isEdit) {
+            const limit = getLimit(user, 'invoices');
+            
+            // Filtrar facturas creadas este mes
+            const thisMonth = new Date().getMonth();
+            const thisYear = new Date().getFullYear();
+            const monthlyInvoices = invoices.filter(inv => {
+                if (!inv.created_date) return false;
+                const d = new Date(inv.created_date);
+                return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+            });
+
+            if (monthlyInvoices.length >= limit) {
+                toast.error(`Límite mensual alcanzado: Tu plan actual permite un máximo de ${limit} facturas al mes. Para facturar sin límites, por favor actualiza a POSENT PRO.`);
+                return;
+            }
+        }
         saveMutation.mutate({
             ...form,
             subtotal,

@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
     LayoutDashboard, Users, Package, FileText, Receipt,
-    BarChart3, Settings, X, Zap, Wallet, Plug, LogOut
+    BarChart3, Settings, X, Zap, Wallet, Plug, LogOut, ShieldAlert
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
+import {
+    Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
+} from "@/components/ui/dialog";
 
 const navItems = [
     { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -19,9 +23,17 @@ const navItems = [
     { path: "/settings", label: "Configuración", icon: Settings },
 ];
 
+const proNavItems = [
+    { label: "Multi-sucursales", icon: Zap },
+    { label: "Factura Fiscal (DGII)", icon: Zap },
+    { label: "Reparaciones Pro", icon: Zap },
+    { label: "Contabilidad Completa", icon: Zap },
+];
+
 export default function Sidebar({ open, onClose }) {
     const location = useLocation();
     const { logout } = useAuth();
+    const [proDialogOpen, setProDialogOpen] = useState(false);
 
     return (
         <>
@@ -47,7 +59,7 @@ export default function Sidebar({ open, onClose }) {
                     </Button>
                 </div>
 
-                <nav className="flex-1 px-3 space-y-1">
+                <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
                     {navItems.map((item) => {
                         const isActive = location.pathname === item.path ||
                             (item.path !== "/" && location.pathname.startsWith(item.path));
@@ -68,9 +80,30 @@ export default function Sidebar({ open, onClose }) {
                             </Link>
                         );
                     })}
+
+                    <div className="pt-4 border-t border-border mt-4">
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-3 mb-2">Exclusivo de POSENT PRO</p>
+                        {proNavItems.map((item) => (
+                            <button
+                                key={item.label}
+                                onClick={() => {
+                                    onClose();
+                                    setProDialogOpen(true);
+                                }}
+                                className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-muted-foreground/60 hover:text-primary hover:bg-secondary cursor-pointer"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <item.icon className="w-4.5 h-4.5 text-muted-foreground/40" />
+                                    <span>{item.label}</span>
+                                </div>
+                                <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-bold">PRO</span>
+                            </button>
+                        ))}
+                    </div>
+
                     <button
                         onClick={() => logout()}
-                        className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-destructive hover:bg-destructive/10 cursor-pointer"
+                        className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-destructive hover:bg-destructive/10 cursor-pointer mt-4"
                     >
                         <LogOut className="w-4.5 h-4.5" />
                         Cerrar sesión
@@ -92,6 +125,39 @@ export default function Sidebar({ open, onClose }) {
                     </a>
                 </div>
             </aside>
+
+            <Dialog open={proDialogOpen} onOpenChange={setProDialogOpen}>
+                <DialogContent className="sm:max-w-[425px] bg-card border-border">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-primary font-bold text-lg">
+                            <ShieldAlert className="w-5 h-5 text-primary" />
+                            ¡Pásate a POSENT PRO! 🚀
+                        </DialogTitle>
+                        <DialogDescription className="pt-2 text-sm text-muted-foreground">
+                            Esta función está disponible de manera ilimitada en la versión completa de **POSENT PRO**. 
+                            <br /><br />
+                            Disfruta de:
+                            <ul className="list-disc list-inside mt-2 space-y-1 text-xs">
+                                <li>Multi-sucursales e inventario compartido</li>
+                                <li>Facturación fiscal con RNC e ITBIS (DGII)</li>
+                                <li>Módulo Pro de Órdenes y Reparaciones</li>
+                                <li>Contabilidad avanzada y reportes financieros</li>
+                                <li>Productos y facturas ilimitadas</li>
+                            </ul>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="mt-4 flex sm:justify-between gap-2">
+                        <Button variant="ghost" onClick={() => setProDialogOpen(false)}>
+                            Seguir en Free
+                        </Button>
+                        <a href="https://posentrd.com/subscription" target="_blank" rel="noopener noreferrer">
+                            <Button className="font-bold shadow-md shadow-primary/20">
+                                Ver Planes PRO 💳
+                            </Button>
+                        </a>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+import { toast } from "sonner";
+import { getLimit } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,7 +35,6 @@ export default function QuoteForm() {
     const { data: quotes = [] } = useQuery({
         queryKey: ["quotes"],
         queryFn: () => base44.entities.Quote.list(),
-        enabled: isEdit,
     });
     const existing = quotes.find((q) => q.id === id);
 
@@ -94,6 +95,23 @@ export default function QuoteForm() {
     });
 
     const handleSave = () => {
+        if (!isEdit) {
+            const limit = getLimit(user, 'invoices'); // Usar el mismo límite de facturación para simplificar
+            
+            // Filtrar cotizaciones creadas este mes
+            const thisMonth = new Date().getMonth();
+            const thisYear = new Date().getFullYear();
+            const monthlyQuotes = quotes.filter(q => {
+                if (!q.created_date) return false;
+                const d = new Date(q.created_date);
+                return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+            });
+
+            if (monthlyQuotes.length >= limit) {
+                toast.error(`Límite mensual alcanzado: Tu plan actual permite un máximo de ${limit} cotizaciones al mes. Para cotizar sin límites, por favor actualiza a POSENT PRO.`);
+                return;
+            }
+        }
         saveMutation.mutate({
             ...form,
             subtotal,

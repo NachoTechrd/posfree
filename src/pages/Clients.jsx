@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/AuthContext";
+import { toast } from "sonner";
+import { getLimit } from "@/lib/utils";
 import { Users, Plus, Search, Phone, Mail, MapPin, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +23,7 @@ import {
 const emptyClient = { name: "", phone: "", email: "", address: "", notes: "" };
 
 export default function Clients() {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [search, setSearch] = useState("");
@@ -67,6 +71,11 @@ export default function Clients() {
     };
 
     const openNew = () => {
+        const limit = getLimit(user, 'clients');
+        if (clients.length >= limit) {
+            toast.error(`Límite alcanzado: Tu plan actual permite un máximo de ${limit} clientes. Para registrar más, por favor actualiza a POSENT PRO.`);
+            return;
+        }
         setEditing(null);
         setForm(emptyClient);
         setDialogOpen(true);

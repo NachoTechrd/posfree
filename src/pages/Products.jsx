@@ -4,6 +4,8 @@ import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { Package, Plus, Search, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { getLimit } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -93,6 +95,11 @@ export default function Products() {
     };
 
     const openNew = () => {
+        const limit = getLimit(user, 'products');
+        if (products.length >= limit) {
+            toast.error(`Límite alcanzado: Tu plan actual permite un máximo de ${limit} productos. Para agregar más, por favor actualiza a POSENT PRO.`);
+            return;
+        }
         setEditing(null);
         setForm(getEmptyProduct());
         setDialogOpen(true);
