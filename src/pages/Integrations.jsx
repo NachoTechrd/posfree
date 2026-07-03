@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import axios from "axios";
 import { Plug, CheckCircle2, XCircle, Copy, RefreshCw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -97,21 +98,35 @@ export default function Integrations() {
 
     const handleTest = async (system) => {
         if (system !== "whabot") return;
-        if (!form.whabot_webhook_url || !form.whabot_api_key) { 
-            toast.error("Ingresa la URL del Webhook y la API Key primero"); 
-            return; 
+        if (!form.whabot_webhook_url || !form.whabot_api_key) {
+            toast.error("Ingresa la URL del Webhook y el Identificador de Instancia primero");
+            return;
         }
         setTestingWhabot(true);
-        
         try {
+            // Primero guarda la configuración actual
             await saveMutation.mutateAsync(form);
-            toast.success("Conexión exitosa: Tu cuenta de Whabot Pro está validada y lista.");
+            // Luego llama al endpoint de prueba real
+            const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3002/api";
+            const token = localStorage.getItem("posent_access_token") || "";
+            const { data: apiResp } = await axios.post(
+                `${apiBase}/settings/whabot/test`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (apiResp.success) {
+                toast.success("✅ ¡Conexión exitosa! Revisa tu WhatsApp, deberías recibir un mensaje de prueba.");
+            } else {
+                toast.error(apiResp.message || "Error al probar la conexión");
+            }
         } catch (err) {
-            console.error('Error al probar conexion:', err);
+            const msg = err?.response?.data?.message || err?.message || "Error al probar la conexión";
+            toast.error(`❌ ${msg}`);
         } finally {
             setTestingWhabot(false);
         }
     };
+
 
     const copyApiKey = () => {
         navigator.clipboard.writeText(form.api_key_interna);
