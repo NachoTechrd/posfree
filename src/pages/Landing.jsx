@@ -143,10 +143,10 @@ export default function Landing() {
                         ))}
                     </div>
 
-                    {/* App Preview */}
+                    {/* Video Demo Real */}
                     <div className="pt-8 max-w-4xl mx-auto">
-                        <div className="relative rounded-2xl overflow-hidden border border-white/8 shadow-2xl shadow-black/60">
-                            {/* Chrome bar */}
+                        <div className="relative rounded-2xl overflow-hidden border border-white/8 shadow-2xl shadow-black/60 bg-[#0a0c16]">
+                            {/* Chrome window header */}
                             <div className="bg-[#0f111a] px-4 py-3 flex items-center gap-2 border-b border-white/5">
                                 <div className="flex gap-1.5">
                                     <div className="w-3 h-3 rounded-full bg-red-500/60" />
@@ -154,40 +154,19 @@ export default function Landing() {
                                     <div className="w-3 h-3 rounded-full bg-green-500/60" />
                                 </div>
                                 <div className="flex-1 mx-4 bg-white/5 rounded-md px-3 py-1 text-xs text-white/30 font-mono text-left">
-                                    free.posentrd.com/dashboard
+                                    Demo: Cómo hacer una factura en POSENT
                                 </div>
                             </div>
-                            {/* Dashboard Mock */}
-                            <div className="bg-[#0a0c16] p-6 aspect-[16/8] flex flex-col gap-4">
-                                <div className="grid grid-cols-4 gap-3">
-                                    {[
-                                        { label: "Ventas Hoy", value: "RD$12,450", color: "from-violet-600/20 to-violet-600/5", border: "border-violet-500/20", text: "text-violet-400" },
-                                        { label: "Facturas", value: "24", color: "from-blue-600/20 to-blue-600/5", border: "border-blue-500/20", text: "text-blue-400" },
-                                        { label: "Productos", value: "138", color: "from-emerald-600/20 to-emerald-600/5", border: "border-emerald-500/20", text: "text-emerald-400" },
-                                        { label: "Clientes", value: "67", color: "from-amber-600/20 to-amber-600/5", border: "border-amber-500/20", text: "text-amber-400" },
-                                    ].map((card, i) => (
-                                        <div key={i} className={`bg-gradient-to-b ${card.color} rounded-xl border ${card.border} p-3`}>
-                                            <div className="text-white/40 text-xs mb-1">{card.label}</div>
-                                            <div className={`text-xl font-black ${card.text}`}>{card.value}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex-1 grid grid-cols-3 gap-3">
-                                    <div className="col-span-2 bg-white/3 rounded-xl border border-white/5 p-3 flex flex-col gap-2">
-                                        <div className="text-white/30 text-xs">Últimas Facturas</div>
-                                        {["Farmacia Don Pedro", "Almacén El Parque", "Tienda Rosy"].map((n, i) => (
-                                            <div key={i} className="flex justify-between items-center py-1 border-b border-white/5 last:border-0">
-                                                <span className="text-white/60 text-xs">{n}</span>
-                                                <span className="text-emerald-400 text-xs font-bold">RD${(Math.random() * 5000 + 500).toFixed(0)}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="bg-white/3 rounded-xl border border-white/5 p-3">
-                                        <div className="text-white/30 text-xs mb-2">Estado Caja</div>
-                                        <div className="text-2xl font-black text-emerald-400">RD$8,200</div>
-                                        <div className="text-white/30 text-xs mt-1">efectivo en mano</div>
-                                    </div>
-                                </div>
+                            {/* HTML5 Video Player */}
+                            <div className="relative aspect-[16/9] w-full bg-black">
+                                <video
+                                    src="/crear-factura.mp4"
+                                    poster="/empieza-gratis.webp"
+                                    preload="none"
+                                    controls
+                                    className="w-full h-full object-cover"
+                                    playsInline
+                                />
                             </div>
                         </div>
                     </div>
@@ -227,6 +206,41 @@ export default function Landing() {
                             </div>
                         ))}
                     </div>
+
+                    {/* Visual Showcase of Features */}
+                    <div className="mt-24 space-y-24">
+                        {/* Feature Showcase 1 */}
+                        <div className="grid md:grid-cols-2 gap-12 items-center text-left">
+                            <div className="space-y-4">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-xs font-semibold text-violet-300">
+                                    Interactividad
+                                </div>
+                                <h3 className="text-3xl font-extrabold text-white">Haz tus facturas al instante</h3>
+                                <p className="text-white/55 leading-relaxed">
+                                    Nuestra interfaz limpia e intuitiva te permite seleccionar productos, aplicar descuentos, configurar impuestos y registrar pagos con un solo clic. Genera facturas profesionales listas para imprimir o enviar.
+                                </p>
+                            </div>
+                            <div className="rounded-2xl overflow-hidden border border-white/8 shadow-2xl bg-white/2 hover:scale-[1.01] transition-all duration-300">
+                                <img src="/haz-facturas-gratis.webp" alt="Crear factura gratis" className="w-full h-auto object-cover" />
+                            </div>
+                        </div>
+
+                        {/* Feature Showcase 2 */}
+                        <div className="grid md:grid-cols-2 gap-12 items-center text-left">
+                            <div className="rounded-2xl overflow-hidden border border-white/8 shadow-2xl bg-white/2 order-last md:order-first hover:scale-[1.01] transition-all duration-300">
+                                <img src="/ventas-y-clientes.webp" alt="Gestión de ventas y clientes" className="w-full h-auto object-cover" />
+                            </div>
+                            <div className="space-y-4">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-300">
+                                    Control Total
+                                </div>
+                                <h3 className="text-3xl font-extrabold text-white">Tus ventas y clientes bajo control</h3>
+                                <p className="text-white/55 leading-relaxed">
+                                    Monitorea el historial de transacciones, visualiza reportes de caja en tiempo real y gestiona tu cartera de clientes para mantener una relación organizada y profesional en todo momento.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -264,23 +278,41 @@ export default function Landing() {
                                 Comenzar Ahora — Es Gratis <ArrowRight className="w-4 h-4" />
                             </Button>
                         </div>
-                        <div className="space-y-4">
-                            {[
-                                { icon: Zap, color: "text-violet-400", bg: "bg-violet-500/10 border-violet-500/20", title: "Listo en 5 minutos", desc: "Regístrate, crea tu negocio y emite tu primera factura sin necesidad de tutoriales." },
-                                { icon: Users, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20", title: "Para todo tu equipo", desc: "Agrega empleados y cajeros con roles y permisos diferenciados sin costos adicionales." },
-                                { icon: TrendingUp, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20", title: "Reportes en tiempo real", desc: "Ve tus ventas del día, semana y mes. Toma mejores decisiones con datos reales de tu negocio." },
-                                { icon: MessageCircle, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20", title: "Integración con Whabot", desc: "Conecta con Whabot Pro para enviar facturas y alertas de cobro por WhatsApp automáticamente." },
-                            ].map((item, i) => (
-                                <div key={i} className={`flex gap-4 p-4 rounded-xl border ${item.bg} bg-white/2 hover:bg-white/4 transition-all`}>
-                                    <div className={`w-10 h-10 rounded-lg ${item.bg} flex items-center justify-center shrink-0`}>
-                                        <item.icon className={`w-5 h-5 ${item.color}`} />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-white text-sm">{item.title}</h4>
-                                        <p className="text-white/45 text-xs mt-0.5 leading-relaxed">{item.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="rounded-2xl overflow-hidden border border-white/8 shadow-2xl bg-white/2 hover:scale-[1.01] transition-all duration-300">
+                            <img src="/posent-pro-vs-free.webp" alt="POSENT Free vs PRO" className="w-full h-auto object-cover" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Whabot Integration Section */}
+            <section className="relative z-10 py-24 border-t border-white/5 bg-gradient-to-b from-transparent to-[#0a120e]/30">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-6 text-left">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-400 uppercase tracking-widest">
+                                <MessageCircle className="w-4 h-4 fill-current" /> Whabot Pro Sync
+                            </div>
+                            <h2 className="text-4xl font-black tracking-tight text-white leading-tight">
+                                Conéctalo con tu
+                                <br />
+                                <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                                    WhatsApp
+                                </span>
+                            </h2>
+                            <p className="text-white/50 text-lg leading-relaxed">
+                                Vincula tu cuenta de **Whabot Pro** con tu **POSENT Free** y envía facturas, recordatorios de pago y mensajes de agradecimiento directamente por WhatsApp a tus clientes de manera 100% automatizada.
+                            </p>
+                            <Button 
+                                size="lg"
+                                onClick={() => navigate("/register")}
+                                className="h-12 px-8 font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20 border-0 hover:scale-[1.02] transition-all"
+                            >
+                                Probar Sincronización
+                            </Button>
+                        </div>
+                        <div className="rounded-2xl overflow-hidden border border-white/8 shadow-2xl hover:scale-[1.01] transition-all duration-300">
+                            <img src="/posent-whabot.webp" alt="Whabot POSENT Integration" className="w-full h-auto object-cover" />
                         </div>
                     </div>
                 </div>
