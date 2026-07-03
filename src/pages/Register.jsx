@@ -94,6 +94,8 @@ export default function Register() {
         setLoading(true);
         try {
             await base44.auth.register({ email, password });
+            // Meta Pixel: usuario inició el proceso de registro (Lead)
+            if (window.fbq) window.fbq('track', 'Lead', { content_name: 'POSENT Free Register' });
             setShowOtp(true);
         } catch (err) {
             setError(err.message || "Error al registrar");
@@ -110,6 +112,8 @@ export default function Register() {
             if (result?.access_token) {
                 base44.auth.setToken(result.access_token);
             }
+            // Meta Pixel: registro completado exitosamente
+            if (window.fbq) window.fbq('track', 'CompleteRegistration', { content_name: 'POSENT Free', currency: 'USD', value: 0 });
             window.location.href = "/";
         } catch (err) {
             setError(err.message || "Código de verificación inválido");
