@@ -150,14 +150,15 @@ export default function Integrations() {
                         />
                     </div>
                     <div>
-                        <Label>API Key de Whabot Pro</Label>
+                        <Label>Identificador de Instancia (Whabot Pro)</Label>
                         <Input
-                            type="password"
+                            type="text"
                             value={form.whabot_api_key}
                             onChange={(e) => setForm({ ...form, whabot_api_key: e.target.value })}
                             onBlur={() => saveMutation.mutate(form)}
-                            placeholder="wk_..."
+                            placeholder="ej. WHABOT_xxxxxxxxxxxx"
                         />
+                        <p className="text-xs text-muted-foreground mt-1">Copia el "Identificador de Instancia" desde tu panel de Whabot Pro → Integraciones → POSENT.</p>
                     </div>
                     <div>
                         <Label>Número de WhatsApp del negocio</Label>
