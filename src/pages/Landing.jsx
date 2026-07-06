@@ -52,7 +52,7 @@ export default function Landing() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#06080f] text-white font-sans flex flex-col overflow-x-hidden">
+        <div className="min-h-screen bg-[#06080f] text-white font-sans flex flex-col overflow-x-hidden pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0">
 
             {/* Animated Background Layer */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -62,25 +62,25 @@ export default function Landing() {
             </div>
 
             {/* Header / Navbar */}
-            <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-[#06080f]/80 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <header className="fixed bottom-0 left-0 right-0 z-50 w-full border-t border-white/5 bg-[#06080f]/90 backdrop-blur-xl pb-[env(safe-area-inset-bottom,0px)] md:sticky md:top-0 md:bottom-auto md:border-t-0 md:border-b md:bg-[#06080f]/80 md:pb-0">
+                <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2.5">
                         <img src="/posent-logo.png" alt="POSENT Logo" className="h-8 w-auto" />
-                        <span className="font-extrabold text-xl tracking-tight text-white">
+                        <span className="font-extrabold text-base sm:text-xl tracking-tight text-white whitespace-nowrap">
                             POSENT <span className="text-white/40 font-light">Free</span>
                         </span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                         <Button
                             variant="ghost"
                             onClick={() => navigate("/login")}
-                            className="text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-all"
+                            className="text-xs sm:text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-all px-2 sm:px-4"
                         >
                             Iniciar Sesión
                         </Button>
                         <Button
                             onClick={() => navigate("/register")}
-                            className="text-sm font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-500/20 border-0 transition-all hover:scale-[1.03]"
+                            className="text-xs sm:text-sm font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-violet-500/20 border-0 transition-all hover:scale-[1.03] px-3 sm:px-4"
                         >
                             Empezar Gratis
                         </Button>
@@ -89,7 +89,7 @@ export default function Landing() {
             </header>
 
             {/* Hero Section */}
-            <section className="relative z-10 pt-16 pb-24 md:pt-28 md:pb-36 text-center">
+            <section className="relative z-10 pt-[calc(4rem+env(safe-area-inset-top,0px))] pb-24 md:pt-28 md:pb-36 text-center">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
                     {/* Badge */}
