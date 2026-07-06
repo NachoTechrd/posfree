@@ -1,0 +1,16 @@
+{
+  "project": "posfree",
+  "platform": "ios",
+  "github": {
+    "owner": "NachoTechrd",
+    "repo": "posfree"
+  },
+  "ios": {
+    "path": "ios/App"
+  },
+  "flutter": {
+    "watch": {}
+  },
+  "reactNative": {},
+  "mobai": {}
+}

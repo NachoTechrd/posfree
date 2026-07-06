@@ -20,7 +20,7 @@ export default function TopBar({ onMenuClick }) {
     }, [dark]);
 
     return (
-        <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border px-4 lg:px-6 h-16 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border px-4 lg:px-6 h-[calc(4rem+env(safe-area-inset-top,0px))] pt-[env(safe-area-inset-top,0px)] flex items-center justify-between gap-4">
             <Button variant="ghost" size="icon" className="lg:hidden h-11 w-11 touch-manipulation active:scale-95 transition-transform" onClick={onMenuClick}>
                 <Menu className="w-6 h-6" />
             </Button>
